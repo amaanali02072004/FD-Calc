@@ -13,6 +13,7 @@ const FDCalc = () => {
 
 
   const cxTypeHandler = e => {
+    console.log('this ----- ',this)
     let value = e.target.value
     setCxType(value)
   }
@@ -117,7 +118,9 @@ const FDCalc = () => {
     const tenDays = +tenureDays
     console.log('Console ~ fdAmtCalcHandler ~ tenureMonths:', tenureMonths)
 
-    const amount = p * (1 + (r * tenYrs + (tenMnths / 12) + (tenDays / 365)))
+    // const amount = p * (1 + (r * tenYrs + (tenMnths / 12) + (tenDays / 365)))
+    const amount = p * (1 + (r * tenYrs) + (r * tenMnths / 12) + (r * tenDays / 365))
+    console.log(r * tenYrs)
     setMaturityAmount(amount.toFixed(2))
   }
 
@@ -136,11 +139,11 @@ const FDCalc = () => {
   return (
     <form id="fdCalc" onChange={fdAmtCalcHandler}>
       <p>Type of Customer</p>
-      <input type="radio" id="normal" name="cxType" value="normal" onChange={cxTypeHandler} />
+      <input type="radio" id="normal" name="cxType" value="normal" onChange={cxTypeHandler} /* checked={cxType == this.target.value} */ />
       <label for="normal">
         Normal
       </label>
-      <input type="radio" id="senior" name="cxType" value="senior" onChange={cxTypeHandler} />
+      <input type="radio" id="senior" name="cxType" value="senior" onChange={cxTypeHandler} /* checked={cxType == this.target.value} */ />
       <label for="senior">
         Senior
       </label>
