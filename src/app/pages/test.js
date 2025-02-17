@@ -119,7 +119,7 @@ const FDCalc = () => {
 
     // const amount = p * (1 + (r * tenYrs + (tenMnths / 12) + (tenDays / 365)))
     const amount = p * (1 + (r * tenYrs) + (r * tenMnths / 12) + (r * tenDays / 365))
-    // setMaturityAmount(amount.toFixed(2))
+    setMaturityAmount(amount.toFixed(2))
   }
 
   useEffect(() => {
