@@ -12,8 +12,69 @@ const FDCalc = () => {
   const [interestRate, setInterestRate] = useState(0)
 
 
+  const paramCheck = () => {
+    // if (tenureType === 'normal') {
+    if (fdType === 'cumulative' || fdType === 'quarterlyPayout') {
+      if (tenureYears >= 6) {
+        setInterestRate(6.20)
+      } else if (tenureYears >= 4) {
+        setInterestRate(7)
+      } else if (tenureYears >= 2) {
+        setInterestRate(7.15)
+      }
+    } else if (fdType === 'monthlyPayout') {
+      if (tenureYears >= 6) {
+        setInterestRate(6.17)
+      } else if (tenureYears >= 4) {
+        setInterestRate(6.96)
+      } else if (tenureYears >= 2) {
+        setInterestRate(7.11)
+      }
+    }
+    // }
+
+    if (tenureType !== 'yearMonthDay') {
+      setTenureYears(0)
+      setTenureMonths(0)
+    }
+
+    // if (fdType === 'shortTermFD') {
+    //   setTenureType('daysOnly')
+    // } else {
+    //   setTenureType('yearMonthDay')
+    // }
+
+    if (cxType == 'normal') {
+      switch (fdType) {
+        case 'monthlyPayout':
+          setInterestRate(7.06)
+          break
+        case 'shortTermFD':
+          setInterestRate(3)
+          break
+
+        default:
+          setInterestRate(7.1)
+          break
+      }
+    } else {
+      switch (fdType) {
+        case 'monthlyPayout':
+          setInterestRate(7.55)
+          break
+        case 'shortTermFD':
+          setInterestRate(3.5)
+          break
+
+        default:
+          setInterestRate(7.6)
+          break
+      }
+
+    }
+  }
+
   const cxTypeHandler = e => {
-    console.log('this ----- ',this)
     let value = e.target.value
     setCxType(value)
   }
@@ -47,68 +108,6 @@ const FDCalc = () => {
     setTenureDays(value)
   }
 
-  const paramCheck = () => {
-    // if (tenureType === 'normal') {
-    if (fdType === 'cumulative' || fdType === 'quarterlyPayout') {
-      if (tenureYears >= 6) {
-        setInterestRate(6.20)
-      } else if (tenureYears >= 4) {
-        setInterestRate(7)
-      } else if (tenureYears >= 2) {
-        setInterestRate(7.15)
-      }
-    } else if (fdType === 'monthlyPayout') {
-      if (tenureYears >= 6) {
-        setInterestRate(6.17)
-      } else if (tenureYears >= 4) {
-        setInterestRate(6.96)
-      } else if (tenureYears >= 2) {
-        setInterestRate(7.11)
-      }
-    }
-    // }
-
-    if (tenureType !== 'yearMonthDay') {
-      setTenureYears(0)
-      setTenureMonths(0)
-    }
-
-    if (fdType === 'shortTermFD') {
-      setTenureType('daysOnly')
-    } else {
-      setTenureType('yearMonthDay')
-    }
-
-    if (cxType == 'normal') {
-      switch (fdType) {
-        case 'monthlyPayout':
-          setInterestRate(7.06)
-          break
-        case 'shortTermFD':
-          setInterestRate(3)
-          break
-
-        default:
-          setInterestRate(7.1)
-          break
-      }
-    } else {
-      switch (fdType) {
-        case 'monthlyPayout':
-          setInterestRate(7.55)
-          break
-        case 'shortTermFD':
-          setInterestRate(3.5)
-          break
-
-        default:
-          setInterestRate(7.6)
-          break
-      }
-
-    }
-  }
-
   const fdAmtCalcHandler = () => {
     paramCheck()
     const p = +depAmt
@@ -120,8 +119,7 @@ const FDCalc = () => {
 
     // const amount = p * (1 + (r * tenYrs + (tenMnths / 12) + (tenDays / 365)))
     const amount = p * (1 + (r * tenYrs) + (r * tenMnths / 12) + (r * tenDays / 365))
-    console.log(r * tenYrs)
-    setMaturityAmount(amount.toFixed(2))
+    // setMaturityAmount(amount.toFixed(2))
   }
 
   useEffect(() => {
@@ -139,11 +137,11 @@ const FDCalc = () => {
   return (
     <form id="fdCalc" onChange={fdAmtCalcHandler}>
       <p>Type of Customer</p>
-      <input type="radio" id="normal" name="cxType" value="normal" onChange={cxTypeHandler} /* checked={cxType == this.target.value} */ />
+      <input type="radio" id="normal" name="cxType" value="normal" onChange={cxTypeHandler} />
       <label for="normal">
         Normal
       </label>
-      <input type="radio" id="senior" name="cxType" value="senior" onChange={cxTypeHandler} /* checked={cxType == this.target.value} */ />
+      <input type="radio" id="senior" name="cxType" value="senior" onChange={cxTypeHandler} />
       <label for="senior">
         Senior
       </label>
