@@ -117,7 +117,6 @@ const FDCalc = () => {
     const tenDays = +tenureDays
     console.log('Console ~ fdAmtCalcHandler ~ tenureMonths:', tenureMonths)
 
-    // const amount = p * (1 + (r * tenYrs + (tenMnths / 12) + (tenDays / 365)))
     const amount = p * (1 + (r * tenYrs) + (r * tenMnths / 12) + (r * tenDays / 365))
     setMaturityAmount(amount.toFixed(2))
   }
@@ -125,13 +124,13 @@ const FDCalc = () => {
   useEffect(() => {
     fdAmtCalcHandler()
   }, [
-    cxType,
-    fdType,
-    depAmt,
-    tenureType,
-    tenureYears,
-    tenureMonths,
-    tenureDays
+    // cxType,
+    // fdType,
+    // depAmt,
+    // tenureType,
+    // tenureYears,
+    // tenureMonths,
+    // tenureDays
   ])
 
   return (
