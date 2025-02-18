@@ -171,7 +171,8 @@ const FDCalc = () => {
       <label for="daysOnly">
         Days Only
       </label>
-
+      {console.log('tenureType --- ', tenureType)}
+      {console.log('fdType --- ', fdType)}
       {(tenureType === 'yearMonthDay' || fdType !== 'shortTermFD') &&
         <>
           <p>years</p>
