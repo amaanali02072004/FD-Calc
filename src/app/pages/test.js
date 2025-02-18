@@ -95,7 +95,21 @@ const FDCalc = () => {
           setInterestRate(5.97)
         }
       } else if (fdType === 'shortTermFD') {
-
+        if (tenureDays >= 180) {
+          setInterestRate(7)
+        } else if (tenureDays < 180) {
+          setInterestRate(4.25)
+        } else if (tenureDays <= 120) {
+          setInterestRate(4.00)
+        } else if (tenureDays <= 90) {
+          setInterestRate(3.50)
+        } else if (tenureDays <= 45) {
+          setInterestRate(3.25)
+        } else if (tenureDays <= 30) {
+          setInterestRate(3.00)
+        } else if (tenureDays < 15) {
+          setInterestRate(2.75)
+        }
       }
     } else if (cxType === 'senior') {
       if (fdType === 'cumulative' || fdType === 'quarterlyPayout') {
@@ -126,6 +140,22 @@ const FDCalc = () => {
         } else if (tenureTime < 1) {
           setInterestRate(6.46)
         }
+      } else if (fdType === 'shortTermFD') {
+        // if (tenureDays >= 180) {
+        //   setInterestRate(7)
+        // } else if (tenureDays < 180) {
+        //   setInterestRate(4.25)
+        // } else if (tenureDays <= 120) {
+        //   setInterestRate(4.00)
+        // } else if (tenureDays <= 90) {
+        //   setInterestRate(3.50)
+        // } else if (tenureDays <= 45) {
+        //   setInterestRate(3.25)
+        // } else if (tenureDays <= 30) {
+        //   setInterestRate(3.00)
+        // } else if (tenureDays < 15) {
+        //   setInterestRate(2.75)
+        // }
       }
     }
 
@@ -178,7 +208,7 @@ const FDCalc = () => {
   const fdAmtCalcHandler = e => {
     e?.preventDefault()
     paramCheck()
-    console.log(tenureTime, interestRate)
+    console.log(tenureTime, tenureDays, interestRate)
     const p = +depAmt
     const r = +interestRate / 100
     const tenYrs = +tenureYears
