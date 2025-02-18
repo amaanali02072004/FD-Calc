@@ -188,6 +188,8 @@ const FDCalc = () => {
 
   const tenureTypeHandler = e => {
     let value = e.target.value
+    setTenureYears(0)
+    setTenureMonths(0)
     setTenureType(value)
   }
 
