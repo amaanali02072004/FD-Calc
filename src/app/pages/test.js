@@ -15,26 +15,25 @@ const FDCalc = () => {
 
   const paramCheck = () => {
     setTenureTime(+(+tenureYears + (+tenureMonths / 12) + (+tenureDays / 365)).toFixed(1))
-    console.log('+tenureYears + (+tenureMonths / 12) + (+tenureDays / 365) ----', +tenureTime)
 
     // integrate change of months and daysss
-    if (fdType === 'cumulative' || fdType === 'quarterlyPayout') {
-      if (tenureYears >= 6) {
-        setInterestRate(6.20)
-      } else if (tenureYears >= 4) {
-        setInterestRate(7)
-      } else if (tenureYears >= 2) {
-        setInterestRate(7.15)
-      }
-    } else if (fdType === 'monthlyPayout') {
-      if (tenureYears >= 6) {
-        setInterestRate(6.17)
-      } else if (tenureYears >= 4) {
-        setInterestRate(6.96)
-      } else if (tenureYears >= 2) {
-        setInterestRate(7.11)
-      }
-    }
+    // if (fdType === 'cumulative' || fdType === 'quarterlyPayout') {
+    //   if (tenureYears >= 6) {
+    //     setInterestRate(6.20)
+    //   } else if (tenureYears >= 4) {
+    //     setInterestRate(7)
+    //   } else if (tenureYears >= 2) {
+    //     setInterestRate(7.15)
+    //   }
+    // } else if (fdType === 'monthlyPayout') {
+    //   if (tenureYears >= 6) {
+    //     setInterestRate(6.17)
+    //   } else if (tenureYears >= 4) {
+    //     setInterestRate(6.96)
+    //   } else if (tenureYears >= 2) {
+    //     setInterestRate(7.11)
+    //   }
+    // }
 
     // base interest valuesss!!
     if (cxType == 'normal') {
@@ -62,6 +61,71 @@ const FDCalc = () => {
         default:
           setInterestRate(7.6)
           break
+      }
+    }
+
+    // interest changesss....
+    if (cxType === 'normal') {
+      if (fdType === 'cumulative' || fdType === 'quarterlyPayout') {
+        if (tenureTime > 5) {
+          setInterestRate(6.20)
+        } else if (tenureTime > 3) {
+          setInterestRate(7.00)
+        } else if (tenureTime >= 2) {
+          setInterestRate(7.15)
+        } else if (tenureTime > 1 && tenureTime < 2) {
+          setInterestRate(7.40)
+        } else if (tenureTime === 1) {
+          setInterestRate(7.10)
+        } else if (tenureTime < 1) {
+          setInterestRate(6)
+        }
+      } else if (fdType === 'monthlyPayout') {
+        if (tenureTime > 5) {
+          setInterestRate(6.17)
+        } else if (tenureTime > 3) {
+          setInterestRate(6.96)
+        } else if (tenureTime >= 2) {
+          setInterestRate(7.11)
+        } else if (tenureTime > 1 && tenureTime < 2) {
+          setInterestRate(7.35)
+        } else if (tenureTime === 1) {
+          setInterestRate(7.06)
+        } else if (tenureTime < 1) {
+          setInterestRate(5.97)
+        }
+      } else if (fdType === 'shortTermFD') {
+
+      }
+    } else if (cxType === 'senior') {
+      if (fdType === 'cumulative' || fdType === 'quarterlyPayout') {
+        if (tenureTime > 5) {
+          setInterestRate(6.70)
+        } else if (tenureTime > 3) {
+          setInterestRate(7.60)
+        } else if (tenureTime >= 2) {
+          setInterestRate(7.65)
+        } else if (tenureTime > 1 && tenureTime < 2) {
+          setInterestRate(7.90)
+        } else if (tenureTime === 1) {
+          setInterestRate(7.60)
+        } else if (tenureTime < 1) {
+          setInterestRate(6.50)
+        }
+      } else if (fdType === 'monthlyPayout') {
+        if (tenureTime > 5) {
+          setInterestRate(6.66)
+        } else if (tenureTime > 3) {
+          setInterestRate(7.55)
+        } else if (tenureTime >= 2) {
+          setInterestRate(7.60)
+        } else if (tenureTime > 1 && tenureTime < 2) {
+          setInterestRate(7.85)
+        } else if (tenureTime === 1) {
+          setInterestRate(7.55)
+        } else if (tenureTime < 1) {
+          setInterestRate(6.46)
+        }
       }
     }
 
@@ -114,6 +178,7 @@ const FDCalc = () => {
   const fdAmtCalcHandler = e => {
     e?.preventDefault()
     paramCheck()
+    console.log(tenureTime, interestRate)
     const p = +depAmt
     const r = +interestRate / 100
     const tenYrs = +tenureYears
@@ -170,7 +235,7 @@ const FDCalc = () => {
       <p>select tenure</p>
       <input type="radio" id="yearMonthDay" name="tenure" value="yearMonthDay" onChange={tenureTypeHandler} />
       <label for="yearMonthDay">
-        Yers / Months / Days
+        Years / Months / Days
       </label>
       <input type="radio" id="daysOnly" name="tenure" value="daysOnly" onChange={tenureTypeHandler} />
       <label for="daysOnly">
