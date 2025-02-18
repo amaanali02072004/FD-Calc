@@ -293,9 +293,9 @@ const FDCalc = () => {
       {/* <input type="submit" value="submit" /> */}
 
       <br />
-      maturity value: {maturityAmount.toFixed(2)}
+      maturity value: {Number(+maturityAmount).toFixed(2)}
       <br />
-      interest value: {(maturityAmount - depAmt).toFixed(2)}
+      interest value: {Number(+maturityAmount - +depAmt).toFixed(2)}
       <br />
       interest rate: {interestRate} %
     </form>
