@@ -141,21 +141,21 @@ const FDCalc = () => {
           setInterestRate(6.46)
         }
       } else if (fdType === 'shortTermFD') {
-        // if (tenureDays >= 180) {
-        //   setInterestRate(7)
-        // } else if (tenureDays < 180) {
-        //   setInterestRate(4.25)
-        // } else if (tenureDays <= 120) {
-        //   setInterestRate(4.00)
-        // } else if (tenureDays <= 90) {
-        //   setInterestRate(3.50)
-        // } else if (tenureDays <= 45) {
-        //   setInterestRate(3.25)
-        // } else if (tenureDays <= 30) {
-        //   setInterestRate(3.00)
-        // } else if (tenureDays < 15) {
-        //   setInterestRate(2.75)
-        // }
+        if (tenureDays >= 180) {
+          setInterestRate(7.50)
+        } else if (tenureDays < 180) {
+          setInterestRate(4.75)
+        } else if (tenureDays <= 120) {
+          setInterestRate(4.50)
+        } else if (tenureDays <= 90) {
+          setInterestRate(4.00)
+        } else if (tenureDays <= 45) {
+          setInterestRate(3.75)
+        } else if (tenureDays <= 30) {
+          setInterestRate(3.50)
+        } else if (tenureDays < 15) {
+          setInterestRate(3.25)
+        }
       }
     }
 
@@ -293,9 +293,9 @@ const FDCalc = () => {
       {/* <input type="submit" value="submit" /> */}
 
       <br />
-      maturity value: {maturityAmount}
+      maturity value: {maturityAmount.toFixed(2)}
       <br />
-      interest value: {maturityAmount - depAmt}
+      interest value: {(maturityAmount - depAmt).toFixed(2)}
       <br />
       interest rate: {interestRate} %
     </form>
