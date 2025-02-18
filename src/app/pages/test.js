@@ -123,13 +123,21 @@ const FDCalc = () => {
 
   useEffect(() => {
     fdAmtCalcHandler()
-  }, [maturityAmount])
+  }, [
+    cxType,
+    fdType,
+    depAmt,
+    tenureYears,
+    tenureMonths,
+    tenureDays,
+    interestRate
+  ])
 
   return (
     <form
       id="fdCalc"
-      onChange={fdAmtCalcHandler}
-      // onSubmit={fdAmtCalcHandler}
+    // onChange={fdAmtCalcHandler}
+    // onSubmit={fdAmtCalcHandler}
     >
       <p>Type of Customer</p>
       <input type="radio" id="normal" name="cxType" value="normal" onChange={cxTypeHandler} />
@@ -164,7 +172,7 @@ const FDCalc = () => {
         Days Only
       </label>
 
-      {(tenureType === 'yearMonthDay' && fdType !== 'shortTermFD') &&
+      {(tenureType === 'yearMonthDay' || fdType !== 'shortTermFD') &&
         <>
           <p>years</p>
           <select id="fdYears" name="fdYears" form="fdCalc" value={tenureYears} onChange={tenureYearsHandler}>
