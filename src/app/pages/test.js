@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { months } from './common/months'
 
 const FDCalc = () => {
   const [cxType, setCxType] = useState('normal')
@@ -11,9 +12,8 @@ const FDCalc = () => {
   const [maturityAmount, setMaturityAmount] = useState(0)
   const [interestRate, setInterestRate] = useState(0)
 
-
   const paramCheck = () => {
-    // if (tenureType === 'normal') {
+    // if (cxType === 'normal') {
     if (fdType === 'cumulative' || fdType === 'quarterlyPayout') {
       if (tenureYears >= 6) {
         setInterestRate(6.20)
@@ -38,11 +38,11 @@ const FDCalc = () => {
       setTenureMonths(0)
     }
 
-    // if (fdType === 'shortTermFD') {
-    //   setTenureType('daysOnly')
-    // } else {
-    //   setTenureType('yearMonthDay')
-    // }
+    if (fdType === 'shortTermFD') {
+      setTenureType('daysOnly')
+    } else {
+      setTenureType('yearMonthDay')
+    }
 
     if (cxType == 'normal') {
       switch (fdType) {
@@ -108,14 +108,14 @@ const FDCalc = () => {
     setTenureDays(value)
   }
 
-  const fdAmtCalcHandler = () => {
+  const fdAmtCalcHandler = e => {
+    e?.preventDefault()
     paramCheck()
     const p = +depAmt
     const r = +interestRate / 100
     const tenYrs = +tenureYears
     const tenMnths = +tenureMonths
     const tenDays = +tenureDays
-    console.log('Console ~ fdAmtCalcHandler ~ tenureMonths:', tenureMonths)
 
     const amount = p * (1 + (r * tenYrs) + (r * tenMnths / 12) + (r * tenDays / 365))
     setMaturityAmount(amount.toFixed(2))
@@ -123,18 +123,14 @@ const FDCalc = () => {
 
   useEffect(() => {
     fdAmtCalcHandler()
-  }, [
-    // cxType,
-    // fdType,
-    // depAmt,
-    // tenureType,
-    // tenureYears,
-    // tenureMonths,
-    // tenureDays
-  ])
+  }, [maturityAmount])
 
   return (
-    <form id="fdCalc" onChange={fdAmtCalcHandler}>
+    <form
+      id="fdCalc"
+      onChange={fdAmtCalcHandler}
+      // onSubmit={fdAmtCalcHandler}
+    >
       <p>Type of Customer</p>
       <input type="radio" id="normal" name="cxType" value="normal" onChange={cxTypeHandler} />
       <label for="normal">
@@ -153,7 +149,7 @@ const FDCalc = () => {
         <option value="shortTermFD">Short Term FD</option>
       </select>
       <p>date of fixed deposit</p>
-      <p>todays date..</p>
+      <p>{new Date().getDate()}-{months[new Date().getMonth()]}-{new Date().getFullYear()}</p>
 
       <p>amt of deposit</p>
       <input type="number" value={depAmt} onChange={depAmtHandler} />
@@ -168,7 +164,7 @@ const FDCalc = () => {
         Days Only
       </label>
 
-      {tenureType === 'yearMonthDay' &&
+      {(tenureType === 'yearMonthDay' && fdType !== 'shortTermFD') &&
         <>
           <p>years</p>
           <select id="fdYears" name="fdYears" form="fdCalc" value={tenureYears} onChange={tenureYearsHandler}>
@@ -205,6 +201,7 @@ const FDCalc = () => {
       }
       <p>days</p>
       <input type="number" value={tenureDays} onChange={tenureDaysHandler} />
+      {/* <input type="submit" value="submit" /> */}
 
       <br />
       maturity value: {maturityAmount}
