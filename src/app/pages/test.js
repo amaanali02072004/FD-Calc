@@ -6,6 +6,7 @@ const FDCalc = () => {
   const [fdType, setFdType] = useState('cumulative')
   const [depAmt, setDepAmt] = useState(5000)
   const [tenureType, setTenureType] = useState('yearMonthDay')
+  const [tenureTime, setTenureTime] = useState(0)
   const [tenureYears, setTenureYears] = useState(1)
   const [tenureMonths, setTenureMonths] = useState(0)
   const [tenureDays, setTenureDays] = useState(0)
@@ -13,7 +14,10 @@ const FDCalc = () => {
   const [interestRate, setInterestRate] = useState(0)
 
   const paramCheck = () => {
-    // if (cxType === 'normal') {
+    setTenureTime(+(+tenureYears + (+tenureMonths / 12) + (+tenureDays / 365)).toFixed(1))
+    console.log('+tenureYears + (+tenureMonths / 12) + (+tenureDays / 365) ----', +tenureTime)
+
+    // integrate change of months and daysss
     if (fdType === 'cumulative' || fdType === 'quarterlyPayout') {
       if (tenureYears >= 6) {
         setInterestRate(6.20)
@@ -31,19 +35,8 @@ const FDCalc = () => {
         setInterestRate(7.11)
       }
     }
-    // }
 
-    if (tenureType !== 'yearMonthDay') {
-      setTenureYears(0)
-      setTenureMonths(0)
-    }
-
-    if (fdType === 'shortTermFD') {
-      setTenureType('daysOnly')
-    } else {
-      setTenureType('yearMonthDay')
-    }
-
+    // base interest valuesss!!
     if (cxType == 'normal') {
       switch (fdType) {
         case 'monthlyPayout':
@@ -70,7 +63,17 @@ const FDCalc = () => {
           setInterestRate(7.6)
           break
       }
+    }
 
+    if (tenureType !== 'yearMonthDay') {
+      setTenureYears(0)
+      setTenureMonths(0)
+    }
+
+    if (fdType === 'shortTermFD') {
+      setTenureType('daysOnly')
+    } else {
+      setTenureType('yearMonthDay')
     }
   }
 
@@ -127,6 +130,7 @@ const FDCalc = () => {
     cxType,
     fdType,
     depAmt,
+    tenureTime,
     tenureYears,
     tenureMonths,
     tenureDays,
@@ -136,6 +140,7 @@ const FDCalc = () => {
   return (
     <form
       id="fdCalc"
+    // onChange={paramCheck}
     // onChange={fdAmtCalcHandler}
     // onSubmit={fdAmtCalcHandler}
     >
@@ -171,40 +176,20 @@ const FDCalc = () => {
       <label for="daysOnly">
         Days Only
       </label>
-      {console.log('tenureType --- ', tenureType)}
-      {console.log('fdType --- ', fdType)}
-      {(tenureType === 'yearMonthDay' || fdType !== 'shortTermFD') &&
+      {tenureType !== 'daysOnly' &&
         <>
           <p>years</p>
           <select id="fdYears" name="fdYears" form="fdCalc" value={tenureYears} onChange={tenureYearsHandler}>
-            <option value="0">0</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
+            {[...Array(11).keys()].map(i => (
+              <option key={i} value={i}>{i}</option>
+            ))}
           </select>
 
           <p>months</p>
           <select id="fdMonths" name="fdMonths" form="fdCalc" value={tenureMonths} onChange={tenureMonthsHandler}>
-            <option value="0">0</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
+            {[...Array(13).keys()].map(i => (
+              <option key={i} value={i}>{i}</option>
+            ))}
           </select>
         </>
       }
