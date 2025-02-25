@@ -24,7 +24,9 @@ const InputComponent = ({ range = true, defaultValue, label, type = 'text', opti
     <InputWrapper psudo={psudo}>
       <div>
         <p>{label}</p>
-        <input type="text" name={name} value={value} onChange={onChange} disabled={type == 'select' || type == 'radio'} />
+        {(type !== 'select' && type !== 'radio') &&
+          <input type="text" name={name} value={value} onChange={onChange} disabled={type == 'select' || type == 'radio'} />
+        }
       </div>
       {((type !== 'select' && type !== 'radio') && range) &&
         <input type="range" name={name} min={min} max={max} value={value} step={step} onChange={onChange} />
@@ -64,25 +66,8 @@ const FDUI = () => {
   const [maturityAmount, setMaturityAmount] = useState(0)
   const [interestRate, setInterestRate] = useState(1)
 
-
   const paramCheck = () => {
     setTenureTime(+(+tenureYears + (+tenureMonths / 12) + (+tenureDays / 365)).toFixed(1))
-
-    // if (tenureType == 'daysOnly') {
-    //   setTenureYears(0)
-    //   setTenureMonths(0)
-    // }
-
-    // if (fdType === 'shortTermFD') {
-    //   setTenureType('daysOnly')
-    //   setTenureYears(0)
-    //   setTenureMonths(0)
-    // } else {
-    //   setTenureType('yearMonthDay')
-    // }
-
-
-
 
     if (cxType == 'normal') {
       switch (fdType) {
@@ -92,7 +77,6 @@ const FDUI = () => {
         case 'shortTermFD':
           setInterestRate(3)
           break
-
         default:
           setInterestRate(7.1)
           break
@@ -105,7 +89,6 @@ const FDUI = () => {
         case 'shortTermFD':
           setInterestRate(3.5)
           break
-
         default:
           setInterestRate(7.6)
           break
@@ -145,15 +128,15 @@ const FDUI = () => {
         console.log(tenureDays, interestRate)
         if (tenureDays >= 180) {
           setInterestRate(7)
-        } else if (tenureDays >= 120) {
+        } else if (tenureDays > 120) {
           setInterestRate(4.25)
-        } else if (tenureDays >= 90) {
+        } else if (tenureDays > 90) {
           setInterestRate(4.00)
-        } else if (tenureDays >= 45) {
+        } else if (tenureDays > 45) {
           setInterestRate(3.50)
-        } else if (tenureDays >= 30) {
+        } else if (tenureDays > 30) {
           setInterestRate(3.25)
-        } else if (tenureDays >= 15) {
+        } else if (tenureDays > 15) {
           setInterestRate(3.00)
         } else {
           setInterestRate(2.75)
@@ -191,17 +174,17 @@ const FDUI = () => {
       } else if (fdType === 'shortTermFD') {
         if (tenureDays >= 180) {
           setInterestRate(7.50)
-        } else if (tenureDays < 180) {
+        } else if (tenureDays >= 120) {
           setInterestRate(4.75)
-        } else if (tenureDays <= 120) {
+        } else if (tenureDays >= 90) {
           setInterestRate(4.50)
-        } else if (tenureDays <= 90) {
+        } else if (tenureDays >= 45) {
           setInterestRate(4.00)
-        } else if (tenureDays <= 45) {
+        } else if (tenureDays >= 30) {
           setInterestRate(3.75)
-        } else if (tenureDays <= 30) {
+        } else if (tenureDays >= 15) {
           setInterestRate(3.50)
-        } else if (tenureDays < 15) {
+        } else {
           setInterestRate(3.25)
         }
       }
@@ -282,10 +265,10 @@ const FDUI = () => {
     cxType,
     fdType,
     depAmt,
-    // tenureTime,
     tenureYears,
     tenureMonths,
     tenureDays,
+    tenureTime,
     tenureType,
     interestRate
   ])
