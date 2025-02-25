@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { months } from './common/months'
+import { months } from '../common/months'
 
 const FDCalc = () => {
   const [cxType, setCxType] = useState('normal')
