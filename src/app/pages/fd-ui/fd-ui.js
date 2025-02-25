@@ -70,15 +70,15 @@ const FDUI = () => {
 
   const fdAmtCalcHandler = e => {
     e?.preventDefault()
-    // paramCheck()
-    console.log(tenureTime, tenureDays, interestRate)
     const p = +depAmt
     const r = +interestRate / 100
     const tenYrs = +tenureYears
     const tenMnths = +tenureMonths
     const tenDays = +tenureDays
 
-    const amount = p * (1 + (r * tenYrs) + (r * tenMnths / 12) + (r * tenDays / 365))
+    const totalYears = tenYrs + (tenMnths / 12) + (tenDays / 365)
+
+    const amount = p * Math.pow((1 + r / 4), 4 * totalYears)
     setMaturityAmount(amount.toFixed(2))
   }
 
@@ -164,7 +164,7 @@ const FDUI = () => {
                     ₹{depAmt}
                   </span></Legend>
                   <Legend color='#ff0049'>Est. Earned<span>
-                    ₹{Number(+maturityAmount).toFixed(2) - depAmt}
+                    ₹{Number(+maturityAmount - depAmt).toFixed(2)}
                   </span></Legend>
                   <Graph width={depAmt / Number(+maturityAmount) * 100} />
                   <p><strong>Note:</strong> Quarterly interest Payout is Considered.</p>
