@@ -1,16 +1,53 @@
 import { useState, useEffect } from 'react'
 import { months } from '../../common/months'
-import { CalcGraph, Calcvalue, Container, Graph, HeaderTextContent, HeaderTextIcon, HeaderTextWrapper, HolderWrapper, InnerWrapper, InputWrapper, Legend, Lhs, OuterWrapper, Rhs } from './style'
+import {
+  CalcGraph,
+  Calcvalue,
+  Container,
+  Graph,
+  HeaderTextContent,
+  HeaderTextIcon,
+  HeaderTextWrapper,
+  HolderWrapper,
+  InnerWrapper,
+  InputWrapper,
+  Legend,
+  Lhs,
+  OuterWrapper,
+  RadioWrapper,
+  Rhs
+} from './style'
 
 
-const InputComponent = ({ label, type = 'text', psudo, value, onChange, min, max, step, name }) => {
+const InputComponent = ({ label, type = 'text', options, psudo, value, onChange, min, max, step, name }) => {
   return (
     <InputWrapper psudo={psudo}>
       <div>
         <p>{label}</p>
-        <input type={type} name={name} value={value} onChange={onChange} />
+        <input type="text" name={name} value={value} onChange={onChange} disabled={type == 'select' || type == 'radio'} />
       </div>
-      <input type="range" name={name} min={min} max={max} value={value} step={step} onChange={onChange} />
+      {(type !== 'select' && type !== 'radio') &&
+        <input type="range" name={name} min={min} max={max} value={value} step={step} onChange={onChange} />
+      }
+      {type == 'radio' &&
+        <RadioWrapper>
+          {options.map(i => (
+            <div key={i.value}>
+              <input id={i.value} type={type} name={name} value={i.value} onChange={onChange} />
+              <label for={i.value}>
+                {i.title}
+              </label>
+            </div>
+          ))}
+        </RadioWrapper>
+      }
+      {type == 'select' &&
+        <select name={name} value={value} onChange={onChange}>
+          {options.map(i => (
+            <option key={i.value} value={i.value}>{i.title}</option>
+          ))}
+        </select>
+      }
     </InputWrapper>
   )
 }
@@ -26,6 +63,144 @@ const FDUI = () => {
   const [tenureDays, setTenureDays] = useState(0)
   const [maturityAmount, setMaturityAmount] = useState(0)
   const [interestRate, setInterestRate] = useState(1)
+
+
+  const paramCheck = () => {
+    setTenureTime(+(+tenureYears + (+tenureMonths / 12) + (+tenureDays / 365)).toFixed(1))
+
+    if (cxType == 'normal') {
+      switch (fdType) {
+        case 'monthlyPayout':
+          setInterestRate(7.06)
+          break
+        case 'shortTermFD':
+          setInterestRate(3)
+          break
+
+        default:
+          setInterestRate(7.1)
+          break
+      }
+    } else {
+      switch (fdType) {
+        case 'monthlyPayout':
+          setInterestRate(7.55)
+          break
+        case 'shortTermFD':
+          setInterestRate(3.5)
+          break
+
+        default:
+          setInterestRate(7.6)
+          break
+      }
+    }
+
+    if (cxType === 'normal') {
+      if (fdType === 'cumulative' || fdType === 'quarterlyPayout') {
+        if (tenureTime > 5) {
+          setInterestRate(6.20)
+        } else if (tenureTime > 3) {
+          setInterestRate(7.00)
+        } else if (tenureTime >= 2) {
+          setInterestRate(7.15)
+        } else if (tenureTime > 1 && tenureTime < 2) {
+          setInterestRate(7.40)
+        } else if (tenureTime === 1) {
+          setInterestRate(7.10)
+        } else if (tenureTime < 1) {
+          setInterestRate(6)
+        }
+      } else if (fdType === 'monthlyPayout') {
+        if (tenureTime > 5) {
+          setInterestRate(6.17)
+        } else if (tenureTime > 3) {
+          setInterestRate(6.96)
+        } else if (tenureTime >= 2) {
+          setInterestRate(7.11)
+        } else if (tenureTime > 1 && tenureTime < 2) {
+          setInterestRate(7.35)
+        } else if (tenureTime === 1) {
+          setInterestRate(7.06)
+        } else if (tenureTime < 1) {
+          setInterestRate(5.97)
+        }
+      } else if (fdType === 'shortTermFD') {
+        if (tenureDays >= 180) {
+          setInterestRate(7)
+        } else if (tenureDays < 180) {
+          setInterestRate(4.25)
+        } else if (tenureDays <= 120) {
+          setInterestRate(4.00)
+        } else if (tenureDays <= 90) {
+          setInterestRate(3.50)
+        } else if (tenureDays <= 45) {
+          setInterestRate(3.25)
+        } else if (tenureDays <= 30) {
+          setInterestRate(3.00)
+        } else if (tenureDays < 15) {
+          setInterestRate(2.75)
+        }
+      }
+    } else if (cxType === 'senior') {
+      if (fdType === 'cumulative' || fdType === 'quarterlyPayout') {
+        if (tenureTime > 5) {
+          setInterestRate(6.70)
+        } else if (tenureTime > 3) {
+          setInterestRate(7.60)
+        } else if (tenureTime >= 2) {
+          setInterestRate(7.65)
+        } else if (tenureTime > 1 && tenureTime < 2) {
+          setInterestRate(7.90)
+        } else if (tenureTime === 1) {
+          setInterestRate(7.60)
+        } else if (tenureTime < 1) {
+          setInterestRate(6.50)
+        }
+      } else if (fdType === 'monthlyPayout') {
+        if (tenureTime > 5) {
+          setInterestRate(6.66)
+        } else if (tenureTime > 3) {
+          setInterestRate(7.55)
+        } else if (tenureTime >= 2) {
+          setInterestRate(7.60)
+        } else if (tenureTime > 1 && tenureTime < 2) {
+          setInterestRate(7.85)
+        } else if (tenureTime === 1) {
+          setInterestRate(7.55)
+        } else if (tenureTime < 1) {
+          setInterestRate(6.46)
+        }
+      } else if (fdType === 'shortTermFD') {
+        if (tenureDays >= 180) {
+          setInterestRate(7.50)
+        } else if (tenureDays < 180) {
+          setInterestRate(4.75)
+        } else if (tenureDays <= 120) {
+          setInterestRate(4.50)
+        } else if (tenureDays <= 90) {
+          setInterestRate(4.00)
+        } else if (tenureDays <= 45) {
+          setInterestRate(3.75)
+        } else if (tenureDays <= 30) {
+          setInterestRate(3.50)
+        } else if (tenureDays < 15) {
+          setInterestRate(3.25)
+        }
+      }
+    }
+
+    if (tenureType !== 'yearMonthDay') {
+      setTenureYears(0)
+      setTenureMonths(0)
+    }
+
+    if (fdType === 'shortTermFD') {
+      setTenureType('daysOnly')
+    } else {
+      setTenureType('yearMonthDay')
+    }
+  }
 
   const cxTypeHandler = e => {
     let value = e.target.value
@@ -70,6 +245,7 @@ const FDUI = () => {
 
   const fdAmtCalcHandler = e => {
     e?.preventDefault()
+    paramCheck()
     const p = +depAmt
     const r = +interestRate / 100
     const tenYrs = +tenureYears
@@ -78,7 +254,7 @@ const FDUI = () => {
 
     const totalYears = tenYrs + (tenMnths / 12) + (tenDays / 365)
 
-    const amount = p * Math.pow((1 + r / 4), 4 * totalYears)
+    const amount = p * Math.pow((1 + r / 4), 4 * totalYears) // quarterly
     setMaturityAmount(amount.toFixed(2))
   }
 
@@ -119,13 +295,95 @@ const FDUI = () => {
     step: .1
   }
 
-  const tenureData = {
-    label: 'Time Period',
+  const customerData = {
+    label: 'type of customer',
+    name: 'cxType',
+    value: cxType,
+    onChange: cxTypeHandler,
+    type: 'radio',
+    options: [
+      {
+        title: 'Normal',
+        value: 'normal'
+      },
+      {
+        title: 'Senior',
+        value: 'senior'
+      }
+    ]
+  }
+
+  const fdTypeData = {
+    label: 'type of fixed deposit',
+    name: 'fdType',
+    value: fdType,
+    onChange: fdTypeHandler,
+    type: 'select',
+    options: [
+      {
+        title: 'Cumulative',
+        value: 'cumulative'
+      },
+      {
+        title: 'Quarterly Payout',
+        value: 'quarterlyPayout'
+      },
+      {
+        title: 'Monthly Payout',
+        value: 'monthlyPayout'
+      },
+      {
+        title: 'Short Term FD',
+        value: 'shortTermFD'
+      },
+    ]
+  }
+
+  const tenureTypeData = {
+    label: 'select tenure',
+    name: 'tenureType',
+    value: tenureType,
+    onChange: tenureTypeHandler,
+    type: 'radio',
+    options: [
+      {
+        title: 'Years / Months / Days',
+        value: 'yearMonthDay'
+      },
+      {
+        title: 'Days Only',
+        value: 'daysOnly'
+      },
+    ]
+  }
+
+  const tenureYearsData = {
+    label: 'years',
     name: 'tenureYears',
     value: tenureYears,
     onChange: tenureYearsHandler,
     min: 1,
     max: 20,
+    step: 1
+  }
+
+  const tenureMonthsData = {
+    label: 'months',
+    name: 'tenureMonths',
+    value: tenureMonths,
+    onChange: tenureMonthsHandler,
+    min: 0,
+    max: 12,
+    step: 1
+  }
+
+  const tenureDaysData = {
+    label: 'days',
+    name: 'tenureDays',
+    value: tenureDays,
+    onChange: tenureDaysHandler,
+    min: 0,
+    max: 30,
     step: 1
   }
 
@@ -150,9 +408,18 @@ const FDUI = () => {
           <form id="fdCalc">
             <HolderWrapper>
               <Lhs>
+                <InputComponent {...customerData} />
+                <InputComponent {...fdTypeData} />
                 <InputComponent {...principalData} />
+                <InputComponent {...tenureTypeData} />
+                {tenureType !== 'daysOnly' &&
+                  <>
+                    <InputComponent {...tenureYearsData} />
+                    <InputComponent {...tenureMonthsData} />
+                  </>
+                }
+                <InputComponent {...tenureDaysData} />
                 <InputComponent {...interestData} />
-                <InputComponent {...tenureData} />
               </Lhs>
               <Rhs>
                 <Calcvalue>

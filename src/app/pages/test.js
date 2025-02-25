@@ -16,26 +16,6 @@ const FDCalc = () => {
   const paramCheck = () => {
     setTenureTime(+(+tenureYears + (+tenureMonths / 12) + (+tenureDays / 365)).toFixed(1))
 
-    // integrate change of months and daysss
-    // if (fdType === 'cumulative' || fdType === 'quarterlyPayout') {
-    //   if (tenureYears >= 6) {
-    //     setInterestRate(6.20)
-    //   } else if (tenureYears >= 4) {
-    //     setInterestRate(7)
-    //   } else if (tenureYears >= 2) {
-    //     setInterestRate(7.15)
-    //   }
-    // } else if (fdType === 'monthlyPayout') {
-    //   if (tenureYears >= 6) {
-    //     setInterestRate(6.17)
-    //   } else if (tenureYears >= 4) {
-    //     setInterestRate(6.96)
-    //   } else if (tenureYears >= 2) {
-    //     setInterestRate(7.11)
-    //   }
-    // }
-
-    // base interest valuesss!!
     if (cxType == 'normal') {
       switch (fdType) {
         case 'monthlyPayout':
@@ -64,7 +44,6 @@ const FDCalc = () => {
       }
     }
 
-    // interest changesss....
     if (cxType === 'normal') {
       if (fdType === 'cumulative' || fdType === 'quarterlyPayout') {
         if (tenureTime > 5) {

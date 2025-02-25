@@ -145,6 +145,21 @@ export const Graph = styled.div(props => `
   }
 `)
 
+export const RadioWrapper = styled.div(props => `
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  > div {
+    width: 40%;
+    display: flex;
+    align-items: center;
+    margin-top: 16px;
+    > label {
+      margin-left: 10px;
+    }
+  }
+`)
+
 export const InputWrapper = styled.div(props => `
   width: 100%;
   display: flex;
@@ -155,6 +170,7 @@ export const InputWrapper = styled.div(props => `
     width: 100%;
     display: flex;
     p {
+      text-transform: capitalize;
       width: 50%;
     }
     input[type=text],
@@ -175,12 +191,19 @@ export const InputWrapper = styled.div(props => `
       // }
     }
   }
+  // input[type=radio],
+  select,
   input[type=range] {
     width: 100%;
     cursor: pointer;
-    outline: none;
     border-radius: 15px;
-    height: 3px;
     margin-top: 16px;
+    outline: none;
+  }
+  input[type=range] {
+    height: 3px;
+  }
+  option {
+    text-transform: capitalize:
   }
 `)
