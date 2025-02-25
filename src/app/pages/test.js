@@ -143,11 +143,6 @@ const FDCalc = () => {
       setTenureMonths(0)
     }
 
-    if (fdType === 'shortTermFD') {
-      setTenureType('daysOnly')
-    } else {
-      setTenureType('yearMonthDay')
-    }
   }
 
   const cxTypeHandler = e => {

@@ -150,7 +150,8 @@ export const RadioWrapper = styled.div(props => `
   display: flex;
   justify-content: space-between;
   > div {
-    width: 40%;
+    // width: 40%;
+    width: fit-content;
     display: flex;
     align-items: center;
     margin-top: 16px;
@@ -172,6 +173,8 @@ export const InputWrapper = styled.div(props => `
     p {
       text-transform: capitalize;
       width: 50%;
+      display: flex;
+      align-items: center;
     }
     input[type=text],
     input[type=number] {
@@ -194,6 +197,7 @@ export const InputWrapper = styled.div(props => `
   // input[type=radio],
   select,
   input[type=range] {
+    background: transparent;
     width: 100%;
     cursor: pointer;
     border-radius: 15px;

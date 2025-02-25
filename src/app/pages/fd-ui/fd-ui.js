@@ -19,22 +19,22 @@ import {
 } from './style'
 
 
-const InputComponent = ({ label, type = 'text', options, psudo, value, onChange, min, max, step, name }) => {
+const InputComponent = ({ range = true, defaultValue, label, type = 'text', options, psudo, value, onChange, min, max, step, name }) => {
   return (
     <InputWrapper psudo={psudo}>
       <div>
         <p>{label}</p>
         <input type="text" name={name} value={value} onChange={onChange} disabled={type == 'select' || type == 'radio'} />
       </div>
-      {(type !== 'select' && type !== 'radio') &&
+      {((type !== 'select' && type !== 'radio') && range) &&
         <input type="range" name={name} min={min} max={max} value={value} step={step} onChange={onChange} />
       }
       {type == 'radio' &&
         <RadioWrapper>
           {options.map(i => (
             <div key={i.value}>
-              <input id={i.value} type={type} name={name} value={i.value} onChange={onChange} />
-              <label for={i.value}>
+              <input id={i.value} checked={i.value === defaultValue} type={type} name={name} value={i.value} onChange={onChange} disabled={i?.disabled} />
+              <label htmlFor={i.value} disabled={i?.disabled}>
                 {i.title}
               </label>
             </div>
@@ -67,6 +67,22 @@ const FDUI = () => {
 
   const paramCheck = () => {
     setTenureTime(+(+tenureYears + (+tenureMonths / 12) + (+tenureDays / 365)).toFixed(1))
+
+    // if (tenureType == 'daysOnly') {
+    //   setTenureYears(0)
+    //   setTenureMonths(0)
+    // }
+
+    // if (fdType === 'shortTermFD') {
+    //   setTenureType('daysOnly')
+    //   setTenureYears(0)
+    //   setTenureMonths(0)
+    // } else {
+    //   setTenureType('yearMonthDay')
+    // }
+
+
+
 
     if (cxType == 'normal') {
       switch (fdType) {
@@ -126,19 +142,20 @@ const FDUI = () => {
           setInterestRate(5.97)
         }
       } else if (fdType === 'shortTermFD') {
+        console.log(tenureDays, interestRate)
         if (tenureDays >= 180) {
           setInterestRate(7)
-        } else if (tenureDays < 180) {
+        } else if (tenureDays >= 120) {
           setInterestRate(4.25)
-        } else if (tenureDays <= 120) {
+        } else if (tenureDays >= 90) {
           setInterestRate(4.00)
-        } else if (tenureDays <= 90) {
+        } else if (tenureDays >= 45) {
           setInterestRate(3.50)
-        } else if (tenureDays <= 45) {
+        } else if (tenureDays >= 30) {
           setInterestRate(3.25)
-        } else if (tenureDays <= 30) {
+        } else if (tenureDays >= 15) {
           setInterestRate(3.00)
-        } else if (tenureDays < 15) {
+        } else {
           setInterestRate(2.75)
         }
       }
@@ -189,17 +206,6 @@ const FDUI = () => {
         }
       }
     }
-
-    if (tenureType !== 'yearMonthDay') {
-      setTenureYears(0)
-      setTenureMonths(0)
-    }
-
-    if (fdType === 'shortTermFD') {
-      setTenureType('daysOnly')
-    } else {
-      setTenureType('yearMonthDay')
-    }
   }
 
   const cxTypeHandler = e => {
@@ -209,6 +215,13 @@ const FDUI = () => {
 
   const fdTypeHandler = e => {
     let value = e.target.value
+    if (value === 'shortTermFD') {
+      setTenureType('daysOnly')
+      setTenureYears(0)
+      setTenureMonths(0)
+    } else {
+      setTenureType('yearMonthDay')
+    }
     setFdType(value)
   }
 
@@ -219,16 +232,18 @@ const FDUI = () => {
 
   const tenureTypeHandler = e => {
     let value = e.target.value
-    setTenureYears(0)
-    setTenureMonths(0)
+    if (value == 'daysOnly') {
+      setTenureYears(0)
+      setTenureMonths(0)
+    }
     setTenureType(value)
   }
 
   const tenureYearsHandler = e => {
     let value = +e.target.value
-
     setTenureYears(value)
   }
+
   const tenureMonthsHandler = e => {
     let value = +e.target.value
     setTenureMonths(value)
@@ -246,6 +261,7 @@ const FDUI = () => {
   const fdAmtCalcHandler = e => {
     e?.preventDefault()
     paramCheck()
+    console.log('param')
     const p = +depAmt
     const r = +interestRate / 100
     const tenYrs = +tenureYears
@@ -254,7 +270,9 @@ const FDUI = () => {
 
     const totalYears = tenYrs + (tenMnths / 12) + (tenDays / 365)
 
-    const amount = p * Math.pow((1 + r / 4), 4 * totalYears) // quarterly
+    const amount = fdType === 'cumulative'
+      ? p * Math.pow((1 + r / 4), 4 * totalYears) // cumulative
+      : p * (1 + (r * tenYrs) + (r * tenMnths / 12) + (r * tenDays / 365)) // quarterly
     setMaturityAmount(amount.toFixed(2))
   }
 
@@ -264,10 +282,11 @@ const FDUI = () => {
     cxType,
     fdType,
     depAmt,
-    tenureTime,
+    // tenureTime,
     tenureYears,
     tenureMonths,
     tenureDays,
+    tenureType,
     interestRate
   ])
 
@@ -301,6 +320,7 @@ const FDUI = () => {
     value: cxType,
     onChange: cxTypeHandler,
     type: 'radio',
+    defaultValue: cxType,
     options: [
       {
         title: 'Normal',
@@ -345,10 +365,12 @@ const FDUI = () => {
     value: tenureType,
     onChange: tenureTypeHandler,
     type: 'radio',
+    defaultValue: tenureType,
     options: [
       {
         title: 'Years / Months / Days',
-        value: 'yearMonthDay'
+        value: 'yearMonthDay',
+        disabled: fdType == 'shortTermFD'
       },
       {
         title: 'Days Only',
@@ -364,6 +386,7 @@ const FDUI = () => {
     onChange: tenureYearsHandler,
     min: 1,
     max: 20,
+    range: false,
     step: 1
   }
 
@@ -372,6 +395,7 @@ const FDUI = () => {
     name: 'tenureMonths',
     value: tenureMonths,
     onChange: tenureMonthsHandler,
+    range: false,
     min: 0,
     max: 12,
     step: 1
@@ -382,8 +406,9 @@ const FDUI = () => {
     name: 'tenureDays',
     value: tenureDays,
     onChange: tenureDaysHandler,
+    range: false,
     min: 0,
-    max: 30,
+    // max: 30,
     step: 1
   }
 
