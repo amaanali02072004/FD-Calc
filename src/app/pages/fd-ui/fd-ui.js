@@ -20,12 +20,20 @@ import {
 
 
 const InputComponent = ({ range = true, defaultValue, label, type = 'text', options, psudo, value, onChange, min, max, step, name }) => {
+  const paramCheck = e => {
+    if (+e.target.value > max) {
+      e.target.value = +max
+    } else if (+e.target.value < min || +e.target.value == 'NaN') {
+      e.target.value = +min
+    }
+    onChange(e)
+  }
   return (
     <InputWrapper psudo={psudo}>
       <div>
         <p>{label}</p>
         {(type !== 'select' && type !== 'radio') &&
-          <input type="text" name={name} value={value} onChange={onChange} disabled={type == 'select' || type == 'radio'} />
+          <input type="text" name={name} value={value} onChange={e => { paramCheck(e) }} disabled={type == 'select' || type == 'radio'} />
         }
       </div>
       {((type !== 'select' && type !== 'radio') && range) &&
@@ -200,6 +208,7 @@ const FDUI = () => {
     let value = e.target.value
     if (value === 'shortTermFD') {
       setTenureType('daysOnly')
+      setTenureDays((+tenureYears * 365) + (+tenureMonths * 30) + (+tenureDays))
       setTenureYears(0)
       setTenureMonths(0)
     } else {
@@ -215,9 +224,22 @@ const FDUI = () => {
 
   const tenureTypeHandler = e => {
     let value = e.target.value
-    if (value == 'daysOnly') {
+    if (value === 'daysOnly') {
+      // Convert years and months to days
+      const totalDays = (+tenureYears * 365) + (+tenureMonths * 30) + (+tenureDays)
+      setTenureDays(totalDays)
       setTenureYears(0)
       setTenureMonths(0)
+    } else {
+      const totalDays = +tenureDays
+      const years = Math.floor(totalDays / 365)
+      const remainingDaysAfterYears = totalDays % 365
+      const months = Math.floor(remainingDaysAfterYears / 30)
+      const days = remainingDaysAfterYears % 30
+
+      setTenureYears(years)
+      setTenureMonths(months)
+      setTenureDays(days)
     }
     setTenureType(value)
   }
@@ -244,7 +266,6 @@ const FDUI = () => {
   const fdAmtCalcHandler = e => {
     e?.preventDefault()
     paramCheck()
-    console.log('param')
     const p = +depAmt
     const r = +interestRate / 100
     const tenYrs = +tenureYears
@@ -442,12 +463,10 @@ const FDUI = () => {
                     ₹{Number(+maturityAmount - depAmt).toFixed(2)}
                   </span></Legend>
                   <Graph width={depAmt / Number(+maturityAmount) * 100} />
-                  <p><strong>Note:</strong> Quarterly interest Payout is Considered.</p>
+                  <p><strong>Note:</strong> {fdType} interest is Considered.</p>
                 </CalcGraph>
               </Rhs>
             </HolderWrapper>
-
-
           </form>
 
         </InnerWrapper>

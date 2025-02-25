@@ -94,6 +94,7 @@ export const CalcGraph = styled.div(props => `
     line-height: 1;
     margin-top: 5px;
     font-size: 12px;
+    text-transform: capitalize;
   }
 `)
 
