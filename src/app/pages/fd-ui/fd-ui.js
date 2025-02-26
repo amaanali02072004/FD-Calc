@@ -19,7 +19,21 @@ import {
 } from './style'
 
 
-const InputComponent = ({ range = true, defaultValue, label, type = 'text', options, psudo, value, onChange, min, max, step, name }) => {
+const InputComponent = ({
+  range = true,
+  label,
+  type = 'text',
+  options,
+  psudo,
+  value,
+  onBlur,
+  onChange,
+  disabled = false,
+  min = 0,
+  max,
+  step,
+  name
+}) => {
   const paramCheck = e => {
     if (+e.target.value > max) {
       e.target.value = +max
@@ -33,7 +47,7 @@ const InputComponent = ({ range = true, defaultValue, label, type = 'text', opti
       <div>
         <p>{label}</p>
         {(type !== 'select' && type !== 'radio') &&
-          <input type="text" name={name} value={value} onChange={e => { paramCheck(e) }} disabled={type == 'select' || type == 'radio'} />
+          <input type="text" name={name} value={value} onBlur={onBlur} onChange={e => { paramCheck(e) }} disabled={disabled || (type == 'select' || type == 'radio')} />
         }
       </div>
       {((type !== 'select' && type !== 'radio') && range) &&
@@ -43,7 +57,7 @@ const InputComponent = ({ range = true, defaultValue, label, type = 'text', opti
         <RadioWrapper>
           {options.map(i => (
             <div key={i.value}>
-              <input id={i.value} checked={i.value === defaultValue} type={type} name={name} value={i.value} onChange={onChange} disabled={i?.disabled} />
+              <input id={i.value} checked={i.value === value} type={type} name={name} value={i.value} onChange={onChange} disabled={i?.disabled} />
               <label htmlFor={i.value} disabled={i?.disabled}>
                 {i.title}
               </label>
@@ -67,16 +81,15 @@ const FDUI = () => {
   const [fdType, setFdType] = useState('cumulative')
   const [depAmt, setDepAmt] = useState(5000)
   const [tenureType, setTenureType] = useState('yearMonthDay')
-  const [tenureTime, setTenureTime] = useState(0)
   const [tenureYears, setTenureYears] = useState(1)
   const [tenureMonths, setTenureMonths] = useState(0)
   const [tenureDays, setTenureDays] = useState(0)
+  const [tenureTime, setTenureTime] = useState(+(+tenureYears + (+tenureMonths / 12) + (+tenureDays / 365)).toFixed(1))
   const [maturityAmount, setMaturityAmount] = useState(0)
-  const [interestRate, setInterestRate] = useState(1)
+  const [interestRate, setInterestRate] = useState(7.1)
 
   const paramCheck = () => {
     setTenureTime(+(+tenureYears + (+tenureMonths / 12) + (+tenureDays / 365)).toFixed(1))
-
     if (cxType == 'normal') {
       switch (fdType) {
         case 'monthlyPayout':
@@ -199,6 +212,17 @@ const FDUI = () => {
     }
   }
 
+  const onBlurHandler = () => {
+    if ((+tenureTime * 365) < 180 && fdType !== 'shortTermFD') {
+      console.log('Cumulative, Quarterly and Monthly - Tenure should be above 180 days')
+      // return
+    }
+    if (((+tenureDays) > 180 || (+tenureDays) < 7) && fdType == 'shortTermFD') {
+      console.log('Short Term - Tenure should be 7 to 180 days')
+      // return
+    }
+  }
+
   const cxTypeHandler = e => {
     let value = e.target.value
     setCxType(value)
@@ -313,6 +337,8 @@ const FDUI = () => {
     name: 'interest',
     value: interestRate,
     onChange: interestRateHandler,
+    range: false,
+    disabled: true,
     min: 1,
     max: 20,
     step: .1
@@ -324,7 +350,6 @@ const FDUI = () => {
     value: cxType,
     onChange: cxTypeHandler,
     type: 'radio',
-    defaultValue: cxType,
     options: [
       {
         title: 'Normal',
@@ -369,7 +394,6 @@ const FDUI = () => {
     value: tenureType,
     onChange: tenureTypeHandler,
     type: 'radio',
-    defaultValue: tenureType,
     options: [
       {
         title: 'Years / Months / Days',
@@ -388,7 +412,8 @@ const FDUI = () => {
     name: 'tenureYears',
     value: tenureYears,
     onChange: tenureYearsHandler,
-    min: 1,
+    onBlur: onBlurHandler,
+    // min: 1,
     max: 20,
     range: false,
     step: 1
@@ -399,6 +424,7 @@ const FDUI = () => {
     name: 'tenureMonths',
     value: tenureMonths,
     onChange: tenureMonthsHandler,
+    onBlur: onBlurHandler,
     range: false,
     min: 0,
     max: 12,
@@ -409,6 +435,7 @@ const FDUI = () => {
     label: 'days',
     name: 'tenureDays',
     value: tenureDays,
+    onBlur: onBlurHandler,
     onChange: tenureDaysHandler,
     range: false,
     min: 0,

@@ -143,6 +143,7 @@ export const Graph = styled.div(props => `
     position: absolute;
     top: 0;
     left: 0;
+    transition: ease-in-out.5s;
   }
 `)
 
@@ -155,9 +156,13 @@ export const RadioWrapper = styled.div(props => `
     width: fit-content;
     display: flex;
     align-items: center;
-    margin-top: 16px;
+    // margin-top: 16px;
+    cursor: pointer;
+    margin-top: 10px;
     > label {
       margin-left: 10px;
+      // font-size: 13.33px;
+      font-size: 16px;
     }
   }
 `)
@@ -204,6 +209,11 @@ export const InputWrapper = styled.div(props => `
     border-radius: 15px;
     margin-top: 16px;
     outline: none;
+    transition: ease-in-out.5s;
+  }
+  select {
+    font-size: 16px;
+    margin-top: 10px;
   }
   input[type=range] {
     height: 3px;
