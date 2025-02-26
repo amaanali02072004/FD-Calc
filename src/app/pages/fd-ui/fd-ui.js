@@ -76,6 +76,12 @@ const InputComponent = ({
   )
 }
 
+// const DialogBox = props => {
+//   return (
+//     <></>
+//   )
+// }
+
 const FDUI = () => {
   const [cxType, setCxType] = useState('normal')
   const [fdType, setFdType] = useState('cumulative')
