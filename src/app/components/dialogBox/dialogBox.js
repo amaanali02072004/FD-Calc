@@ -9,7 +9,7 @@ const DialogBox = ({ title, message, onClick }) => {
       <InnerWrapper>
         <h2>{title}</h2>
         <p>{message}</p>
-        <button onClick={onClick}>
+        <button onClick={onClick} autoFocus>
           OK
         </button>
       </InnerWrapper>
