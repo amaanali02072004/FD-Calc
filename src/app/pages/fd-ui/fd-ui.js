@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { months } from '../../common/months'
+import { DialogBox } from '../../components/'
 import {
   CalcGraph,
   Calcvalue,
@@ -76,11 +77,6 @@ const InputComponent = ({
   )
 }
 
-// const DialogBox = props => {
-//   return (
-//     <></>
-//   )
-// }
 
 const FDUI = () => {
   const [cxType, setCxType] = useState('normal')
@@ -93,6 +89,7 @@ const FDUI = () => {
   const [tenureTime, setTenureTime] = useState(+(+tenureYears + (+tenureMonths / 12) + (+tenureDays / 365)).toFixed(1))
   const [maturityAmount, setMaturityAmount] = useState(0)
   const [interestRate, setInterestRate] = useState(7.1)
+  const [dialog, setDialog] = useState({ show: false, title: '', message: '' })
 
   const paramCheck = () => {
     setTenureTime(+(+tenureYears + (+tenureMonths / 12) + (+tenureDays / 365)).toFixed(1))
@@ -220,12 +217,18 @@ const FDUI = () => {
 
   const onBlurHandler = () => {
     if ((+tenureTime * 365) < 180 && fdType !== 'shortTermFD') {
-      console.log('Cumulative, Quarterly and Monthly - Tenure should be above 180 days')
-      // return
+      setDialog({
+        show: true,
+        title: 'Invalid Tenure',
+        message: 'Cumulative, Quarterly and Monthly - Tenure should be above 180 days'
+      })
     }
     if (((+tenureDays) > 180 || (+tenureDays) < 7) && fdType == 'shortTermFD') {
-      console.log('Short Term - Tenure should be 7 to 180 days')
-      // return
+      setDialog({
+        show: true,
+        title: 'Invalid Tenure',
+        message: 'Short Term - Tenure should be 7 to 180 days'
+      })
     }
   }
 
@@ -504,6 +507,13 @@ const FDUI = () => {
 
         </InnerWrapper>
       </Container>
+      {dialog.show &&
+        <DialogBox
+          title={dialog.title}
+          message={dialog.message}
+          onClick={() => setDialog({ show: false, title: '', message: '' })}
+        />
+      }
     </OuterWrapper>
   )
 }
