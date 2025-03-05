@@ -43,8 +43,11 @@ const InputComponent = ({
     }
     onChange(e)
   }
+
   return (
-    <InputWrapper psudo={psudo}>
+    <InputWrapper
+      psudo={psudo}
+    >
       <div>
         <p>{label}</p>
         {(type !== 'select' && type !== 'radio') &&
@@ -131,7 +134,7 @@ const FDUI = () => {
           setInterestRate(7.40)
         } else if (tenureTime === 1) {
           setInterestRate(7.10)
-        } else if (tenureTime < 1) {
+        } else {
           setInterestRate(6)
         }
       } else if (fdType === 'monthlyPayout') {
@@ -145,7 +148,7 @@ const FDUI = () => {
           setInterestRate(7.35)
         } else if (tenureTime === 1) {
           setInterestRate(7.06)
-        } else if (tenureTime < 1) {
+        } else {
           setInterestRate(5.97)
         }
       } else if (fdType === 'shortTermFD') {
@@ -178,7 +181,7 @@ const FDUI = () => {
           setInterestRate(7.90)
         } else if (tenureTime === 1) {
           setInterestRate(7.60)
-        } else if (tenureTime < 1) {
+        } else {
           setInterestRate(6.50)
         }
       } else if (fdType === 'monthlyPayout') {
@@ -192,7 +195,7 @@ const FDUI = () => {
           setInterestRate(7.85)
         } else if (tenureTime === 1) {
           setInterestRate(7.55)
-        } else if (tenureTime < 1) {
+        } else {
           setInterestRate(6.46)
         }
       } else if (fdType === 'shortTermFD') {
@@ -258,8 +261,8 @@ const FDUI = () => {
   const tenureTypeHandler = e => {
     let value = e.target.value
     if (value === 'daysOnly') {
-      // Convert years and months to days
       const totalDays = (+tenureYears * 365) + (+tenureMonths * 30) + (+tenureDays)
+
       setTenureDays(totalDays)
       setTenureYears(0)
       setTenureMonths(0)
@@ -422,6 +425,7 @@ const FDUI = () => {
     value: tenureYears,
     onChange: tenureYearsHandler,
     onBlur: onBlurHandler,
+    // disabled: tenureTime >= 20,
     // min: 1,
     max: 20,
     range: false,
@@ -434,6 +438,7 @@ const FDUI = () => {
     value: tenureMonths,
     onChange: tenureMonthsHandler,
     onBlur: onBlurHandler,
+    // disabled: tenureTime >= 20,
     range: false,
     min: 0,
     max: 12,
@@ -445,6 +450,7 @@ const FDUI = () => {
     name: 'tenureDays',
     value: tenureDays,
     onBlur: onBlurHandler,
+    // disabled: tenureTime >= 20,
     onChange: tenureDaysHandler,
     range: false,
     min: 0,
